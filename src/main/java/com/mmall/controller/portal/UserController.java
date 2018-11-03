@@ -101,6 +101,13 @@ public class UserController {
     }
 
 
+    /**
+     * 验证提示问题的答案
+     * @param username
+     * @return
+     */
+    @RequestMapping(value="forget_get_Answer.do",method = RequestMethod.GET)
+    @ResponseBody
     public ServerResponse<String> forgetCheckAnswer(String username,String question,String answer){
         return iUserService.checkAnswer(username, question, answer);
     }
