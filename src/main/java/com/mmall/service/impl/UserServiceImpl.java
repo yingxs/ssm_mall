@@ -66,10 +66,10 @@ public class UserServiceImpl implements IUserService {
 
 
     public ServerResponse<String> checkValid(String str,String type){
-        if(StringUtils.isNoneBlank(type)){
+        if(StringUtils.isNotBlank(type)){
             //开始校验
             if(Const.USERNAME.equals(type)){
-                int resultCount = userMapper.checkEmail(str);
+                int resultCount = userMapper.checkUsername(str);
                 if(resultCount > 0){
                     return ServerResponse.createByErrorMessage("用户名已存在");
                 }
@@ -134,7 +134,7 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByErrorMessage("token无效或过期");
         }
 
-        if(StringUtils.equals(forgetToken,forgetToken)){
+        if(StringUtils.equals(forgetToken,token)){
             String md5Password = MD5Util.MD5EncodeUtf8(passwordNew);
             int rowCount = userMapper.updatePasswordByUsername(username, md5Password);
             if(rowCount > 0){
