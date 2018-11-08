@@ -56,7 +56,7 @@ public class ProductServiceImpl implements IProductService {
             }else{
                 int rowCount = productMapper.insert(product);
                 if(rowCount > 0){
-                    return ServerResponse.createByErrorMessage("新增或更新产品参数不正确");
+                    return ServerResponse.createByErrorMessage("新增产品成功");
                 }
                 return ServerResponse.createByErrorMessage("新增产品失败");
 
@@ -202,7 +202,7 @@ public class ProductServiceImpl implements IProductService {
         }
         //判断是否上架
         if(product.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()){
-            return ServerResponse.createByErrorMessage("产品不下架");
+            return ServerResponse.createByErrorMessage("产品已经下架");
         }
 
         ProductDetailVo productDetailVo = assembleProductDetailVo(product);
@@ -214,7 +214,7 @@ public class ProductServiceImpl implements IProductService {
         if(StringUtils.isBlank(keyword) && categoryId == null){
             return ServerResponse.createByErroCoderMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        List<Integer> categoryIdList = new ArrayList<Integer>();
+        List<Integer> categoryIdList = new ArrayList<>();
         if(categoryId != null){
             Category category = categoryMapper.selectByPrimaryKey(categoryId);
             if(category == null && StringUtils.isBlank(keyword)){
@@ -240,7 +240,7 @@ public class ProductServiceImpl implements IProductService {
             }
         }
 
-        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword, StringUtils.isBlank(keyword)?null:categoryIdList);
+        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword, categoryIdList.size()==0 ?null:categoryIdList);
 
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for (Product product : productList){
@@ -248,7 +248,7 @@ public class ProductServiceImpl implements IProductService {
             productListVoList.add(productListVo);
         }
 
-        PageInfo pageInfo = new PageInfo();
+        PageInfo pageInfo = new PageInfo(productList);
         pageInfo.setList(productListVoList);
         return ServerResponse.createBySuccess(pageInfo);
 
