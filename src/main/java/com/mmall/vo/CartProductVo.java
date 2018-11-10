@@ -15,7 +15,7 @@ public class CartProductVo {
     private String productSubtitle;
     private String productMainImage;
     private BigDecimal productPrice;
-    private Integer productStauts;
+    private Integer productStatus;
     private BigDecimal productTotalPrice;   //该商品总价
     private Integer productStock;   //库存
     private Integer productChecked;//此商品是否勾选
@@ -87,12 +87,12 @@ public class CartProductVo {
         this.productPrice = productPrice;
     }
 
-    public Integer getProductStauts() {
-        return productStauts;
+    public Integer getProductStatus() {
+        return productStatus;
     }
 
-    public void setProductStauts(Integer productStauts) {
-        this.productStauts = productStauts;
+    public void setProductStatus(Integer productStatus) {
+        this.productStatus = productStatus;
     }
 
     public BigDecimal getProductTotalPrice() {

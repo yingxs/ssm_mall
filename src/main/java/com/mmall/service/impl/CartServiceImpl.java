@@ -15,6 +15,7 @@ import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.CartProductVo;
 import com.mmall.vo.CartVo;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,12 @@ public class CartServiceImpl implements ICartService {
         Cart cart = cartMapper.selectCartByUserIdProductId(userId, productId);
         if(cart == null){
             //这个产品不在这个购物车里面，需要新增一个产品的记录
+            Product product = productMapper.selectByPrimaryKey(productId);
+
+            if( product == null ){
+                return ServerResponse.createByErrorMessage("该商品不存在");
+            }
+
             Cart cartItem = new Cart();
             cartItem.setQuantity(count);
             cartItem.setChecked(Const.Cart.CHECKED);
@@ -80,8 +87,6 @@ public class CartServiceImpl implements ICartService {
         if(CollectionUtils.isEmpty(productList)){
             return ServerResponse.createByErroCoderMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-
-        cartMapper.deleteByUserIdProductIds(userId,productList);
         return this.list(userId);
     }
 
@@ -130,7 +135,7 @@ public class CartServiceImpl implements ICartService {
                     cartProductVo.setProductMainImage(product.getMainImage());
                     cartProductVo.setProductName(product.getName());
                     cartProductVo.setProductSubtitle(product.getSubtitle());
-                    cartProductVo.setProductStauts(product.getStatus());
+                    cartProductVo.setProductStatus(product.getStatus());
                     cartProductVo.setProductPrice(product.getPrice());
                     cartProductVo.setProductStock(product.getStock());
 

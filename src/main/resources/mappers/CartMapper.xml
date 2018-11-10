@@ -122,13 +122,13 @@
     <include refid="Base_Column_List"/>
     from mmall_cart
     where user_id = #{userId}
-    and product_id = #{productId}}
+    and product_id = #{productId}
   </select>
 
   <select id="selectCartByUserId" parameterType="int" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"/>
-    form mmall_cart
+    FROM  mmall_cart
     where user_id = #{userId}
 
   </select>
@@ -143,7 +143,7 @@
     user_id = #{userId}
   </select>
 
-  <select id="deleteByUserIdProductIds" parameterType="map" resultType="int">
+  <delete id="deleteByUserIdProductIds" parameterType="map" >
     DELETE FROM mmall_cart
     where user_id = #{userId}
     <if test="productIdList != null">
@@ -153,9 +153,9 @@
       </foreach>
     </if>
 
-  </select>
+  </delete>
 
-  <select id="checkedOrUncheckedProduct" parameterType="map" resultType="int" >
+  <update id="checkedOrUncheckedProduct" parameterType="map"  >
     UPDATE mmall_cart
     set checked = #{checked},
     update_time = now()
@@ -163,10 +163,10 @@
     <if test="productId != null">
       and product_id = #{productId}
     </if>
-  </select>
+  </update>
 
   <select id="selectCartProductCount" parameterType="int" resultType="int" >
-    SELECT IFNULL(sum(quantity),0) as count from mmall_cart
+    SELECT IFNULL(sum(quantity),0) as `count` from mmall_cart
     WHERE  user_id = #{userId}
   </select>
 
