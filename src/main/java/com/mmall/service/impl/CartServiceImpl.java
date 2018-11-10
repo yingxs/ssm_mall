@@ -102,6 +102,13 @@ public class CartServiceImpl implements ICartService {
     }
 
 
+    public ServerResponse<Integer> getCartProductCount(Integer userId){
+        if(userId == null){
+            return ServerResponse.createBySuccess(0);
+        }
+        return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
+    }
+
 
 
 

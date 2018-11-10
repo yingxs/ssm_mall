@@ -126,6 +126,20 @@ public class CartController {
         return iCartService.selectOrUnSelect(user.getId(),productId, Const.Cart.UN_CHECKED);
     }
 
+    /**
+     * 查询当前用户的购物车里的产品数量
+     * @param session
+     * @return
+     */
+    @RequestMapping("get_cart_product_count.do")
+    @ResponseBody
+    public ServerResponse<Integer> getCartProductCount(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createBySuccess(0);
+        }
+        return iCartService.getCartProductCount(user.getId());
+    }
 
 
 }
