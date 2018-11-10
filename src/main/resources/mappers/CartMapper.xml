@@ -155,4 +155,32 @@
 
   </select>
 
+  <select id="checkedOrUncheckedProduct" parameterType="map" resultType="int" >
+    UPDATE mmall_cart
+    set checked = #{checked},
+    update_time = now()
+    where user_id = #{userId}
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </mapper>

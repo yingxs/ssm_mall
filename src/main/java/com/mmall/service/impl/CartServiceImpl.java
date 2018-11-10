@@ -55,10 +55,7 @@ public class CartServiceImpl implements ICartService {
             cartMapper.updateByPrimaryKeySelective(cart);
 
         }
-        CartVo cartVo = this.getCartVoLimit(userId);
-
-        return ServerResponse.createBySuccess(cartVo);
-
+        return this.list(userId);
     }
 
 
@@ -75,8 +72,7 @@ public class CartServiceImpl implements ICartService {
             cartMapper.updateByPrimaryKeySelective(cart);
         }
 
-        CartVo cartVo = this.getCartVoLimit(userId);
-        return ServerResponse.createBySuccess(cartVo);
+        return this.list(userId);
     }
 
     public ServerResponse<CartVo> deleteProduct(Integer userId,String productIds){
@@ -86,9 +82,25 @@ public class CartServiceImpl implements ICartService {
         }
 
         cartMapper.deleteByUserIdProductIds(userId,productList);
+        return this.list(userId);
+    }
+
+    public ServerResponse<CartVo> list(Integer userId){
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
     }
+
+    /**
+     * 选择商品
+     * @param userId
+     * @return
+     */
+    public ServerResponse<CartVo> selectOrUnSelect(Integer userId,Integer productId,Integer checked){
+
+        cartMapper.checkedOrUncheckedProduct(userId,productId,checked);
+        return this.list(userId);
+    }
+
 
 
 
