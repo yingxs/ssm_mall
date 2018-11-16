@@ -207,4 +207,11 @@
     and orderNo = #{orderNo}
 
   </select>
+
+  <select id="selectByOrderNo"  resultMap="BaseResultMap" parameterType="long">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM mmall_order
+    WHERE order_no = #{orderNo}
+  </select>
 </mapper>
