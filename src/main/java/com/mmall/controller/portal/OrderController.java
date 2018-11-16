@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by admin on 2018/11/15.
  */
 @Controller
-@RequestMapping("/order/")
+@RequestMapping("/order")
 public class OrderController {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);

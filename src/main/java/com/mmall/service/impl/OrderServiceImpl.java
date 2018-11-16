@@ -161,7 +161,7 @@ public class OrderServiceImpl implements IOrderService {
                 }
 
                 // 需要修改为运行机器上的路径
-                String qrPath = String.format(path+"/qr-%s.png",response.getOutTradeNo());
+                String qrPath = String.format(path+"\\qr-%s.png",response.getOutTradeNo());
                 String qrFileName = String.format("qr-%s.png", response.getOutTradeNo());
                 ZxingUtils.getQRCodeImge(response.getQrCode(), 256, qrPath);
 
@@ -173,8 +173,8 @@ public class OrderServiceImpl implements IOrderService {
                     e.printStackTrace();
                 }
 
-                logger.info("qrPath"+qrPath);
-                logger.info("qrFileName"+qrFileName);
+                logger.info("qrPath:"+qrPath);
+                logger.info("qrFileName:"+qrFileName);
                 String qrUrl = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFile.getName();
 
                 resultMap.put("qrUrl",qrUrl);
