@@ -36,6 +36,19 @@ public class OrderController {
     private IOrderService iOrderService;
 
 
+
+
+    @RequestMapping("crate.do")
+    @ResponseBody
+    public ServerResponse crate(HttpSession session, Integer shippingId){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErroCoderMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.createOrder(user.getId(),shippingId);
+    }
+
+
     @RequestMapping("pay.do")
     @ResponseBody
     public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request){
