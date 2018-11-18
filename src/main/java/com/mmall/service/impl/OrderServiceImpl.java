@@ -10,6 +10,8 @@ import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mmall.common.Const;
@@ -123,7 +125,7 @@ public class OrderServiceImpl implements IOrderService {
 
         //返回数据
 
-        OrderVo orderVo = this.assmableOrderVo(order, orderItemList);
+        OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
         return ServerResponse.createBySuccess(orderVo);
 
     }
@@ -193,17 +195,69 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+    /**
+     * 获取订单详情
+     * @param userId
+     * @param orderNo
+     * @return
+     */
     public ServerResponse<OrderVo> getOrderDetail(Integer userId,Long orderNo){
         Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
         if(order != null){
             List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo, userId);
-            OrderVo orderVo = assmableOrderVo(order, orderItemList);
+            OrderVo orderVo = assembleOrderVo(order, orderItemList);
             return ServerResponse.createBySuccess(orderVo);
         }
 
         return ServerResponse.createByErrorMessage("没有找到该订单");
 
     }
+
+    /**
+     * 获取所有订单的分页
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public ServerResponse<PageInfo> getOrderList(Integer userId,int pageNum,int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderList = orderMapper.selectByUserId(userId);
+        List<OrderVo> orderVoList = assembleOrderVoList(orderList, userId);
+        PageInfo pageResult = new PageInfo(orderList);
+        pageResult.setList(orderVoList);
+        return ServerResponse.createBySuccess(pageResult);
+
+    }
+
+
+    /**
+     * 构建所有订单的Vo对象的List集合
+     * @param orderList
+     * @param userId
+     * @return
+     */
+    private List<OrderVo> assembleOrderVoList(List<Order> orderList,Integer userId){
+        List<OrderVo> orderVoList = Lists.newArrayList();
+        for(Order order : orderList){
+            List<OrderItem> orderItemList = Lists.newArrayList();
+            if(userId == null){
+                //管理员查询的时候不需要传递userId,因为管理员可以查看任何一个人的订单
+                orderItemList = orderItemMapper.getByOrderNo(order.getOrderNo());
+            }else{
+                orderItemList = orderItemMapper.getByOrderNoUserId(order.getOrderNo(), userId);
+            }
+
+            OrderVo orderVo = assembleOrderVo(order, orderItemList);
+            orderVoList.add(orderVo);
+        }
+        return orderVoList;
+
+    }
+
+
+    
+
 
 
 
@@ -214,7 +268,7 @@ public class OrderServiceImpl implements IOrderService {
      * @param orderItemList
      * @return
      */
-    private OrderVo assmableOrderVo(Order order,List<OrderItem> orderItemList){
+    private OrderVo assembleOrderVo(Order order,List<OrderItem> orderItemList){
         OrderVo orderVo = new OrderVo();
         orderVo.setOrderNo(order.getOrderNo());
         orderVo.setPayment(order.getPayment());
@@ -607,6 +661,65 @@ public class OrderServiceImpl implements IOrderService {
         }
         return ServerResponse.createByError();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //backend
+    public ServerResponse<PageInfo> manageList(int pageNum,int pageSize){
+        PageHelper.startPage(pageNum,pageSize);
+        List<Order> orderList = orderMapper.selectAllOrder();
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,null);
+        PageInfo pageResult = new PageInfo(orderList);
+        pageResult.setList(orderVoList);
+
+        return ServerResponse.createBySuccess(pageResult);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
