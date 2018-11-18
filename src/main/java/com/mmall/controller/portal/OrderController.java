@@ -68,6 +68,23 @@ public class OrderController {
         return iOrderService.cancel(user.getId(),orderNo);
     }
 
+    /**
+     * 获取购物车中已经勾选的商品信息
+     * 在预览订单时会使用到
+     * @param session
+     * @return
+     */
+    @RequestMapping("get_order_cart_product.do")
+    @ResponseBody
+    public ServerResponse getOrderCartProduct(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErroCoderMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderCartProduct(user.getId());
+    }
+
+
 
     /**
      * 支付
