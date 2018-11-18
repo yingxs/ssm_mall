@@ -157,6 +157,12 @@ public class OrderServiceImpl implements IOrderService {
 
     }
 
+    /**
+     * 获取购物车中已经勾选的商品
+     * @param userId
+     * @return
+     */
+
     public ServerResponse getOrderCartProduct(Integer userId){
 
         OrderProductVo orderProductVo = new OrderProductVo();
@@ -183,6 +189,19 @@ public class OrderServiceImpl implements IOrderService {
         orderProductVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
         return ServerResponse.createBySuccess(orderProductVo);
 
+
+    }
+
+
+    public ServerResponse<OrderVo> getOrderDetail(Integer userId,Long orderNo){
+        Order order = orderMapper.selectByUserIdAndOrderNo(userId, orderNo);
+        if(order != null){
+            List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo, userId);
+            OrderVo orderVo = assmableOrderVo(order, orderItemList);
+            return ServerResponse.createBySuccess(orderVo);
+        }
+
+        return ServerResponse.createByErrorMessage("没有找到该订单");
 
     }
 
