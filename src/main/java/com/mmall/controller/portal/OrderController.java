@@ -36,8 +36,12 @@ public class OrderController {
     private IOrderService iOrderService;
 
 
-
-
+    /**
+     * 创建订单
+     * @param session
+     * @param shippingId
+     * @return
+     */
     @RequestMapping("crate.do")
     @ResponseBody
     public ServerResponse crate(HttpSession session, Integer shippingId){
@@ -48,7 +52,30 @@ public class OrderController {
         return iOrderService.createOrder(user.getId(),shippingId);
     }
 
+    /**
+     * 取消订单
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("cancel.do")
+    @ResponseBody
+    public ServerResponse cancel(HttpSession session, Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErroCoderMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.cancel(user.getId(),orderNo);
+    }
 
+
+    /**
+     * 支付
+     * @param session
+     * @param orderNo
+     * @param request
+     * @return
+     */
     @RequestMapping("pay.do")
     @ResponseBody
     public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request){
@@ -60,6 +87,11 @@ public class OrderController {
         return iOrderService.pay(orderNo,user.getId(),path);
     }
 
+    /**
+     * 支付宝回调
+     * @param request
+     * @return
+     */
     @RequestMapping("alipay_callback.do")
     @ResponseBody
     public Object alipayCallback(HttpServletRequest request){
@@ -100,7 +132,12 @@ public class OrderController {
     }
 
 
-
+    /**
+     * 订单是否已经付款
+     * @param session
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("query_order_pay_status.do")
     @ResponseBody
     public ServerResponse<Boolean> queryOrderPayStatus(HttpSession session, Long orderNo){
