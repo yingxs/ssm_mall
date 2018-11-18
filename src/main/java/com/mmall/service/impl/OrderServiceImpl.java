@@ -686,6 +686,13 @@ public class OrderServiceImpl implements IOrderService {
 
 
     //backend
+
+    /**
+     * 后台订单分页
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     public ServerResponse<PageInfo> manageList(int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
         List<Order> orderList = orderMapper.selectAllOrder();
@@ -694,6 +701,18 @@ public class OrderServiceImpl implements IOrderService {
         pageResult.setList(orderVoList);
 
         return ServerResponse.createBySuccess(pageResult);
+
+    }
+
+
+    public ServerResponse<OrderVo> manageDetail(Long orderNo){
+        Order order = orderMapper.selectByOrderNo(orderNo);
+        if(order != null){
+            List<OrderItem> orderItemList = orderItemMapper.getByOrderNo(orderNo);
+            OrderVo orderVo = assembleOrderVo(order, orderItemList);
+            return ServerResponse.createBySuccess(orderVo);
+        }
+        return ServerResponse.createByErrorMessage("订单不存在");
 
     }
 
