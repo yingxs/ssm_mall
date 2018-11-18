@@ -57,5 +57,38 @@ public class OrderManageController {
             return ServerResponse.createByErrorMessage("无操作权限");
         }
     }
+    @RequestMapping("search.do")
+    @ResponseBody
+    public ServerResponse<PageInfo> orderSearch(HttpSession session, Long orderNo,@RequestParam(value = "pageNum" ,defaultValue = "1")int pageNum,
+                                               @RequestParam(value = "pageSize" ,defaultValue = "10") int pageSize){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErroCoderMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，请管理员登录");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return iOrderService.manageSearch(orderNo, pageNum, pageSize);
+        }else{
+            return ServerResponse.createByErrorMessage("无操作权限");
+        }
+
+    }
+
+
+
+    @RequestMapping("send_goods.do")
+    @ResponseBody
+    public ServerResponse<String> orderSendGoods(HttpSession session, Long orderNo,@RequestParam(value = "pageNum" ,defaultValue = "1")int pageNum,
+                                               @RequestParam(value = "pageSize" ,defaultValue = "10") int pageSize){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if(user == null){
+            return ServerResponse.createByErroCoderMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，请管理员登录");
+        }
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return iOrderService.manageSendGoods(orderNo);
+        }else{
+            return ServerResponse.createByErrorMessage("无操作权限");
+        }
+
+    }
 
 }
