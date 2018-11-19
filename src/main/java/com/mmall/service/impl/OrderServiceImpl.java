@@ -735,7 +735,7 @@ public class OrderServiceImpl implements IOrderService {
             OrderVo orderVo = assembleOrderVo(order, orderItemList);
 
             PageInfo pageResult = new PageInfo(Lists.newArrayList(order));
-            pageResult.setList(Lists.newArrayList(order));
+            pageResult.setList(Lists.newArrayList(orderVo));
             return ServerResponse.createBySuccess(pageResult);
         }
         return ServerResponse.createByErrorMessage("订单不存在");

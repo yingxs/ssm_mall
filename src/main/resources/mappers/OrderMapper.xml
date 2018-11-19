@@ -224,7 +224,7 @@
 
   </select>
 
-  <select id="selectAllOrder" >
+  <select id="selectAllOrder" resultMap="BaseResultMap" >
     SELECT
     <include refid="Base_Column_List"/>
     from mmall_order

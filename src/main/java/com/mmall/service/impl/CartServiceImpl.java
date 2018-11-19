@@ -87,6 +87,7 @@ public class CartServiceImpl implements ICartService {
         if(CollectionUtils.isEmpty(productList)){
             return ServerResponse.createByErroCoderMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
+        cartMapper.deleteByUserIdProductIds(userId,productList);
         return this.list(userId);
     }
 

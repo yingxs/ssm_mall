@@ -43,7 +43,7 @@ public class OrderController {
      * @param shippingId
      * @return
      */
-    @RequestMapping("crate.do")
+    @RequestMapping("create.do")
     @ResponseBody
     public ServerResponse crate(HttpSession session, Integer shippingId){
         User user = (User) session.getAttribute(Const.CURRENT_USER);
