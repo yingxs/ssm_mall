@@ -40,6 +40,9 @@ public class UserSpringSessionController {
     @ResponseBody
     public ServerResponse<User> login(String username, String password , HttpSession session, HttpServletResponse httpServletResponse){
         ServerResponse<User> response = iUserService.login(username, password);
+
+        int i = 10/0;
+
         if(response.isSuccess()){
 
             session.setAttribute(Const.CURRENT_USER,response.getData());

@@ -50,6 +50,12 @@ public class RedisShardedPool {
 
     static {
         initPool();
+        System.out.println();
+        System.out.println();
+        System.out.println("RedisShardedPool");
+        System.out.println();
+        System.out.println();
+
     }
 
 
