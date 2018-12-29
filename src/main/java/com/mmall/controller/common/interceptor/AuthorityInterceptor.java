@@ -1,5 +1,6 @@
 package com.mmall.controller.common.interceptor;
 
+import com.google.common.collect.Maps;
 import com.mmall.common.Const;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
@@ -65,6 +66,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             user = JsonUtil.string2Obj(userJsonStr, User.class);
         }
 
+        log.info("权限拦截器拦截到请求,className:{},method:{},param:{}",className,methodName,paramMap.toString());
+
         if(user == null || (user.getRole() != Const.Role.ROLE_ADMIN)){
             //返回false
             response.reset();//这里要添加reset方法，否则会报异常getWriter() has ...
@@ -73,9 +76,24 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             PrintWriter out = response.getWriter();
 
             if(user == null){
-                out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户未登录")));
+                //由于上传富文本的控件要求，要特殊处理返回值，这里区分是否登录和是否有管理员权限
+                if(StringUtils.equals(className,"ProductManageController") && StringUtils.equals(methodName,"richtextImgUpload") ){
+                    Map resultMap = Maps.newHashMap();
+                    resultMap.put("success",false);
+                    resultMap.put("msg","请登录管理员");
+                    out.print(JsonUtil.obj2String(resultMap));
+                }else{
+                    out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户未登录")));
+                }
             }else{
-                out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户无权限操作")));
+                if(StringUtils.equals(className,"ProductManageController") && StringUtils.equals(methodName,"richtextImgUpload") ){
+                    Map resultMap = Maps.newHashMap();
+                    resultMap.put("success",false);
+                    resultMap.put("msg","无权限操作");
+                    out.print(JsonUtil.obj2String(resultMap));
+                }else{
+                    out.print(JsonUtil.obj2String(ServerResponse.createByErrorMessage("拦截器拦截，用户无权限操作")));
+                }
             }
             out.flush();
             out.close();
