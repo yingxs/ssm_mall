@@ -51,6 +51,13 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
         }
 
+        if(StringUtils.equals(className,"UserManageController") && StringUtils.equals(methodName,"login") ){
+            log.info("权限拦截器拦截到请求，className:{},methodName:{}",className,methodName);
+            //不解析参数，因为里面有密码
+            return true;
+        }
+
+
         User user = null;
         String loginToken = CookieUtil.readLoginToken(request);
         if(StringUtils.isNotEmpty(loginToken)){
