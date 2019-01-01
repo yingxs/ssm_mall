@@ -1,5 +1,6 @@
 package com.mmall.controller.backend;
 
+import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Maps;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
@@ -63,6 +64,16 @@ public class ProductManageController {
         //通过拦截器验证是否登录或拥有管理员权限
         return iProductService.saveOrUpdateProduct(product);
 
+    }
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServerResponse<PageInfo> list(@RequestParam(value="keyword",required=false)String keyword,
+                                         @RequestParam(value="categoryId",required=false) Integer categoryId,
+                                         @RequestParam(value="pageNum",defaultValue = "1") int pageNum,
+                                         @RequestParam(value="pageSize",defaultValue = "10")  int pageSize,
+                                         @RequestParam(value="orderBy",defaultValue = "")  String  orderBy){
+
+        return iProductService.getProductByKeywordCategory(keyword, categoryId, pageNum, pageSize, orderBy);
     }
 
     @RequestMapping("set_sale_status.do")
